@@ -1,0 +1,30 @@
+<script>
+  const socket = io();
+
+  $(() => {
+    $('#send').click(() => {
+      sendMessage({
+        userName: $('#name').val(),
+        message: $('#message').val(),
+      });
+    });
+    getMessages();
+  });
+  socket.on('message', addMessages);
+  function addMessages(msg) {
+    $('#messages').append(`
+  <h4> ${msg.userName} </h4>
+  <p>  ${msg.message} </p>
+  `);
+  }
+
+  function getMessages() {
+    $.get('http://localhost:3001/messages', (data) => {
+      data.forEach((msg) => addMessages(msg));
+    });
+  }
+
+  function sendMessage(msg) {
+    $.post('http://localhost:3001/messages', msg);
+  }
+</script>
